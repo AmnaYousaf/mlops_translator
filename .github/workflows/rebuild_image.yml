@@ -18,7 +18,7 @@ jobs:
 
     - name: Build and Push Docker Image
       env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_USERNAME: ${{ secrets.wardashah }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_TOCKEN }}
       run: |
         docker buildx create --use
