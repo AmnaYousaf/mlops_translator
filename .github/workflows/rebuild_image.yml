@@ -1,0 +1,35 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main # Replace with your branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and Push Docker Image
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_TOCKEN }}
+      run: |
+        docker buildx create --use
+        docker buildx inspect default --bootstrap
+
+        docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          -t wardashah/mlops_translator \
+          -t wardashah/mlops_translator:${{ github.sha }} \
+          .
+        
+        docker login -u $DOCKER_USERNAME -p $DOCKER_TOCKEN
+        docker push wardashah/mlops_translator
+        docker push wardashah/mlops_translator:${{ github.sha }}
